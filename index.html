@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prezentacja: DOM i Obsługa Zdarzeń</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>DOM - Model Obiektowy Dokumentu</h1>
+        <p>Manipulacja DOM i obsługa zdarzeń w JavaScript</p>
+    </header>
+    
+    <div class="slides-container">
+        <!-- Slajdy -->
+        <section class="slide" id="slide1">
+            <h2>Co to jest DOM?</h2>
+            <p>DOM (Obiektowy Model Dokumentu) to sposób reprezentacji dokumentów HTML i XML w postaci struktury obiektowej. Jest on kluczowym elementem umożliwiającym przeglądarki interpretację kodu HTML i dynamiczne zarządzanie zawartością strony.</p>
+            <h2>Jak działa DOM?</h2>
+            <ul>
+                <li>Przeglądarka pobiera plik HTML jako tekst.</li>
+                <li>Tworzy drzewo DOM, przekształcając kod na obiekty w pamięci.</li>
+                <li>Poprawia błędy w HTML-u automatycznie.</li>
+                <li>Udostępnia DOM JavaScriptowi, który może manipulować elementami strony.</li>
+            </ul>
+        </section>
+
+        <section class="slide" id="slide2">
+            <h2>Struktura drzewa DOM</h2>
+            <p>DOM jest reprezentowany jako drzewo, w którym każdy element HTML jest węzłem powiązanym z innymi elementami.</p>
+            <h3>Struktura drzewa DOM wygląda następująco:</h3>
+            <ul>
+                <li>Węzeł główny – document, czyli cały dokument HTML.</li>
+                <li>Element główny – html, będący bezpośrednim dzieckiem document.</li>
+                <li>Gałęzie HTML – head i body, które przechowują odpowiednio metadane strony i jej główną zawartość.</li>
+                <li>Elementy potomne – każdy element wewnątrz head i body jest kolejnym węzłem w strukturze drzewa.</li>
+            </ul>
+            <h4>Dzięki tej hierarchii JavaScript może łatwo odnajdywać i modyfikować konkretne elementy na stronie.</h4>
+            <h3>Czemu DOM jest istotny?</h3>
+            <p>DOM odgrywa kluczową rolę w interaktywności stron internetowych. Dzięki niemu możliwe jest:
+                <br>
+                ✅ Dynamiczne modyfikowanie zawartości – zmiana tekstu, obrazów czy stylów bez przeładowywania strony.
+                <br>
+                ✅ Manipulacja strukturą strony – dodawanie, usuwanie i przemieszczanie elementów HTML.
+                <br>
+                ✅ Obsługa zdarzeń użytkownika – reagowanie na kliknięcia, ruchy myszą, naciśnięcia klawiszy i inne interakcje.</p>
+            <h3>Jak to wpływa na szybkość stron?</h3>  
+            <p>Kiedyś strony były statyczne – każda zmiana wymagała przeładowania całej witryny. Dzięki DOM, JavaScript może aktualizować tylko wybrane elementy, co znacząco przyspiesza działanie stron i poprawia komfort użytkownika.</p>  
+        </section>
+
+        <section class="slide" id="slide3">
+            <h1>Manipulacja DOM</h1>
+            <p>Manipulacja DOM to kluczowy aspekt pracy z JavaScriptem w kontekście stron internetowych. Dzięki JavaScriptowi możemy dynamicznie dodawać, usuwać lub modyfikować elementy strony w odpowiedzi na interakcje użytkownika. Na kolejnych slajdach przedstawimy w jakie sposoby możemy się poruszać po drzewie DOM oraz nim manipulować.
+            </p>
+            <h3>Wybieranie elementów DOM</h3>
+            <ul>
+                <li>document.getElementById() - metoda pozwala na szybki dostęp do danego elementu w dokumencie, ponieważ ID są unikalne. Nie działa, gdy dany element nie istnieje.</li>
+                <br>
+                <li>document.getElementsByClassName() - Zwraca kolekcję (HTMLCollection) elementów z określoną klasą I aktualizuje się dynamicznie, gdy DOM ulega zmienie.</li><br>
+                <li>document.getElementsByTagName() - Zwraca kolekcję wszystkich elementów danego typu (np. "div", "p"). Pozwala pobrać w ten sposób wszystkie elementy danego znacznika HTML.</li><br>
+                <li>document.querySelector() - Zwraca pierwszy znaleziony element, pasujący do selektora CSS. Jest elastyczny przez co łatwo można wybrierać według id, klasy, tagu czy atrybutów. Zwraca NULL gdy nic nie pasuje.</li><br>
+                <li>document.querySelectorAll() - Zwraca statyczny NodeList wszystkich pasujących elementów. W przeciwieństwie do getElementsByClassName() nie aktualizuje się dynamicznie.</li><br>
+                <li>document.activeElement - Zwraca aktualnie aktywny element. Przydatna metoda w obsłudze formularzy lub interaktywnych elementów strony</li>
+            </ul>
+            <br>
+            <br>
+            <h3>Nawigacja po drzewie DOM</h3>
+            <p>DOM jest strukturą drzewiastą, gdzie każdy element ma rodzica (parent) i może mieć dzieci (children). Te właściwości pomagają poruszać się po tej strukturze.</p>
+            <p>parentNode - Zwraca rodzica danego elementu.Można przejść od dziecka do jego kontenera (np. li → ul).Zwraca NULL gdy nie ma rodzica.</p>
+            <p>childNodes - Zwraca kolekcję (NodeList) wszystkich dzieci danego elementu.Zawiera każdy węzeł – tekst, komentarze, elementy HTML. Natomiast często lepiej używać document.children.</p>
+            <p>children - Zwraca kolekcje elementów (HTMLCollection) dzieci danego elementu.</p>
+            <p>firstChild / lastChild - 
+            Zwracają pierwszy i ostatni węzeł w childNodes. Może to być element, ale też tekstowy węzeł (np. biały znak).
+            UWAGA: Jeśli chcemy tylko elementy, lepiej użyć firstElementChild i lastElementChild. (Jest to o tyle dobre rozwiązanie, że firstElementChild I lastElementChild pozwala uniknąć problemów z białymi znakami ponieważ te zwracają cały węzeł)</p>
+            <p>nextElementSibling - Zwraca następny element tego samego poziomu (ignoruje węzły tekstowe i komentarze).Przydatne, jeśli chcemy dynamicznie nawigować po liście elementów (np. w sliderze, nawigacji).</p>
+            <p>previousElementSibling - Zwraca poprzedni element tego samego poziomu.Używane do poruszania się "wstecz" wśród elementów.</p>
+            <br>
+            <br>
+            <h3>Fragmenty dokumentu</h3>
+            <p>document.createDocumentFragment() - Tworzy tymczasowy framgent dokumentu, który można modyfikować w pamięci, a następnie dodać do DOM. Główną zaletą tego rozwiązania jest poprawa wydajności, ponieważ dodawanie wielu elementów nie wymaga re-renderowania strony.
+            </p>
+            <br>
+            <br>
+            <h3>Kolowanie i zastępowanie elementów</h3>
+            <p>cloneNode(true/false) - Tworzy kopię istniejącego elementu – jako argumenty przyjmuje wartości TRUE lub FALSE.</p>
+            <p>ReplaceChild(new,old) - Zastępuje jeden element innym w jego rodzicu. (Podmienia element w DOM)</p>
+            <br>
+            <br>
+            <h3>Obsługa atrybutów danych (data-*)</h3>
+            <p>Atrybuty data-* to specjalne atrybuty HTML, które pozwalają przechowywać niestandardowe dane w elementach. Można je łatwo odczytać i zmodyfikować w JavaScript za pomocą dataset.</p>
+            <h5>Zastosowania</h5>
+            <p>Przechowywanie dodatkowych informacji o elemencie (np. ID użytkownika, status).</p>
+            <p>Ułatwienie obsługi dynamicznych interakcji w JS bez potrzeby ukrywania danych w atrybutach class lub id.</p>
+            <p>Przydatne w dynamicznych aplikacjach (np. do przechowywania stanu przycisku, wartości w formularzach).</p>
+            <br>
+            <br>
+            <h3>Zmiana treści i atrybutów elementów oraz stylów CSS</h3>
+            <p>textContent -  pobiera lub ustawia czysty tekst. Ignoruje HTML dzięki czemu jest bezpieczny przed atakami XSS bo nie wykonuje kodu HTML.
+            InnerHTML – ustawia I pobiera HTML wewnątrz elementu. Jest podatny na ataki XSS ponieważ można z jego poziomu wykonać kod HTML.</p>
+            <p>InnerHTML – ustawia I pobiera HTML wewnątrz elementu. Jest podatny na ataki XSS ponieważ można z jego poziomu wykonać kod HTML.<br>
+            Jeżeli HTML musi zostać dodany dynamicznie (listy, formatowanie), można zastosować innerHTML, natomiast jeżeli musi zostać dodany tekst bez możliwości interpretacji HTML (np. Dane użytkownika) warto użyć textContent</p>
+            <p>W JavaScript możemy manipulować atrybutowami:
+            SetAttribute I getAttribute() pozwalają odpowiednio dynamicznie zmieniać, dodawać LUB odczytywać atrybuty z elementu.</p>
+            <p>RemoveAttribute() - Stosowany jest gdy chcemy usunąć dynamicznie atrybut z dowolnego elementu</p>
+            <p>Zmiana stylów CSS w JavaScript – element.style.property</p>
+            <p>W JavaScript możemy też dynamicznie zmieniać style CSS elementów za pomocą właściwości style.
+            element.style.property → Pobiera wartość stylu, ale tylko jeśli został ustawiony inline.</p>
+            <p>classList pozwala łatwo dodawać, usuwać i przełączać klasy CSS na elementach HTML. Jest to lepsza alternatywa dla element.className, ponieważ nie nadpisuje istniejących klas</p>
+            <h3>Tworzenie i usuwanie elementów:</h3>
+            <p>W JavaScript możemy dynamicznie dodawać i usuwać elementy w DOM, co pozwala na interaktywne aplikacje. Oto kluczowe metody dodawania:</p>
+            <ul>
+                <li>createElement() - Tworzy nowy element (ale nie dodaje go do DOM)</li>
+                <li>AppendChild() - dodaje element do innego elementu jako OSTATNIE dziecko.</li>
+                <li>InsertAdjacentHTML() - Pozwala wstawić cały kod HTML jako string, bez potrzeby createElement().</li>
+            </ul>
+            <p>W JavaScript jest kilka sposobów na usunięcie elementu z DOM w zależności od sytuacji potrzeb.</p>
+            <ul>
+                <li>Pierwszy z nich to użycie removeChild na elemencie który jest rodzicem obiektu który chcemy usunąć.Jest to Starsza wersja ale działa we wszystkich przeglądarkach. Jej wadą jest konieczność posiadania dostępu do rodzica.</li>
+                <li>Drugim sposobem na usunięcie elementu jest omówiona wczesniej metoda InnerHtml. Po ustawieniu innerhtml dla jakiegoś elementu na pusty ciąg znaków zostaną usunięte wszystkie elementy wewnątrz niego. Pozwala dzięki temu usuwać więcej niż jeden element naraz ale może być mniej wydajna w przypadku dużej ilości elementów.</li>
+                <li>Trzecim I najprostszym sposobem jest użycie metody remove() na pożądanym elemencie. Metoda remove() bezpośrednio usuwa element więc eliminuje potrzebę lokalizowania rodzica. Jej wadą jest jednak brak działania ze starszymi przeglądarkami np Google Chrome poniżej 29 wersji czy Safari poniżej wersji 7.1.</li>
+            </ul>
+        </section>
+        <section class="slide" id="slide4">
+            <h2>Obsługa zdarzeń w JavaScript</h2>
+            <h4>Co to jest zdarzenie?</h4>
+            <p>Zdarzenie to każde działania użytkownika lub przeglądarki, które mogą zostać wyróżnione i obsłużone. Dzięki obsłudze zdarzeń można tworzyć dynamiczne i interaktywne strony.</p>
+            <h4>Przyklady zdarzeń</h4>
+            <p>Zdarzenie Myszy:</p>
+            <ul>
+                <li>click - Klasyczne kliknięcie, które rozumiemy jako naciśnięcie przycisku myszy, a następnie jego zwolnienie które nastąpiło w czasie, gdy wskaźnik (kursor) myszy wciąż znajdował się na elemencie (obiekcie).</li>
+                <li>dblclick - Dwukrotne kliknięcie</li>
+                <li>mouseover - Wystąpi w sytuacji, gdy przycisk myszy został wciśnięty, kiedy kursor znajdował się na elemencie. W odróżnieniu od zdarzenia click kursor nie musi znajdować się na obiekcie w momencie zwalniania przycisku.</li>
+                <li>mousemove - Rejestrowane za każdym razem, gdy kursor myszy poruszy się, znajdując się na elemencie.</li>
+            </ul>
+            <p>Zdarzenia Klawiatury:</p>
+            <ul>
+                <li>keydown - wcisniety klawisz na klawiaturze</li>
+                <li>keyup - rejestrowane gdy wcisniety klawisz zostanie zwolniony</li>
+            </ul>
+            <p>Zdarzenia Formularzy:</p>
+            <ul>
+                <li>submit - Wystąpi w momencie podsumowania (wysłania) danych całego formularza.</li>
+                <li>change - Zachodzi w momencie, gdy zmienia się zawartość lub stan kontrolki formularza - np. zmieniono tekst w polu input lub textarea albo wskazano opcję na liście wyboru select</li>
+                <li>input - Zostanie zarejestrowane, gdy w polu input formularza pojawią się dane wejściowe, czyli w praktyce wpisany przez użytkownika tekst </li>
+            </ul>
+            <p>Zdarzenia Strony:</p>
+            <ul>
+                <li>load - Rejestrowane, kiedy przeglądarka zakończy wczytywanie podstrony</li>
+                <li>resize - Zachodzi w momencie zmiany rozmiaru widoku dokumentu w przeglądarce.</li>
+                <li>focus - Wystąpi w momencie, gdy element HTML znajdzie się w centrum uwagi - np. gdy używamy w witrynie klawisza Tab, kolejne elementy będą właśnie uzyskiwać wyróżnienie (ostrość, uwagę) w interfejsie.</li>
+                <li>blur - W przeciwieństwie do zdarzenia focus, zostanie zarejestrowane w momencie, gdy element przestanie być w centrum uwagi, czyli utraci wyróżnienie (ostrość, uwagę) w interfejsie.</li>
+            </ul>
+            <h4>Obsluga zdarzeń - sposoby</h4>
+            <p>Istnieje kilka sposobów przypisywania funkcji zdarzeniom i ich obslugi:</p>
+            <p>1.Poprzez atrybut html</p>
+            <p>Jest to najprostszy sposób ponieważ dodaje się obsługę już bezpośrednio w HTML używając tagów np.onclick, onblur, onmouseup itd.
+            Nie jest to jednak zalecane ponieważ kod html miesza się z JavaScriptem co utrudnia zarządzanie oraz można przypisać tylko jedną funkcję do zdarzenia.</p>
+            <p>2.Poprzez właściwość onEvent w Javascript</p>
+            <p>Pozwala przypisać funkcję do właściwości obiektu DOM np.onclick ale także umożliwia przypisanie tylko jednej funckji do zdarzenia.</p>
+            <p>3.Poprzez addEventListener()</p>
+            <p>Jest to najlepsza metoda która pozwala użyć tzw. nasłuchiwacza zdarzeń, które nasłuchuje zajscia zdarzenia i w momencie gdy rzeczywiście następuje to wywołuje funkcje. Dużym plusem tej metody jest możliwość dodawania wielu funkcji do tego samego zdarzenia.
+            Dodatkowo korzystając z metody removeEventListener() można łatwo i dynamicznie usunąć konkretne nasłuchiwanie zdarzenia.</p>
+        </section>
+        <section class="slide" id="slide5">
+            <h1>Propagacja i Delegacja Zdarzeń</h1>
+            <br>
+            <br>
+            <h3>Propagacja zdarzeń</h3>
+            <p>Propagacja zdarzeń w JavaScript to mechanizm określający, w jakiej kolejności zdarzenia są przekazywane i obsługiwane w hierarchii elementów DOM. Kiedy element zostaje kliknięty wewnątrz innego elementu, zdarzenie może zostać przekazane do elementów nadrzędnych lub podrzędnych, w zależności od rodzaju propagacji. Mechanizm ten pozwala, by zdarzenie przemieszczało się od elementu, na którym zostało wywołane, aż do korzenia drzewa DOM lub odwrotnie.</p>
+            <h5>Propagację zdarzeń dzielimy na 3 fazy:</h5>
+            <ul>
+                <li>Faza przechwytywania (Capturing Phase) – zdarzenie przechodzi od document w dół do osiągnięcia elementu docelowego. </li>
+                <li>Faza celowa (Target Phase) – zdarzenie dotarło do elementu, na którym zostało wywołane.</li>
+                <li>Faza propagacji (Bubbling Phase) – zdarzenie przechodzi od elementu docelowego w górę, aż do document.</li>
+            </ul>
+            <h5>Metoda event.stopPropagation()</h5>
+            <p>. Domyślnie zdarzenia w JavaScript są obsługiwane w fazie bąbelkowania (chyba że wyraźnie zaznaczymy true w addEventListener() dla fazy przechwytywania), a jesli chcemy zatrzymac propagacje zdarzenia na tej fazie nalezy uzyc metody stopPropagation().</p>
+            <p>Metoda ta jest używana właśnie do zatrzymywania propagacji zdarzenia w górę bądź w dół co pozwoli zapobiec wywołaniu nasłuchiwaczy zdarzeń na innych elementach, co daje pełną kontrolę nad przepływem zdarzeń w aplikacji.</p>
+            <h5>Kiedy warto uzywać metody stop.Propagation()?</h5>
+            <p>Metody tej warto używać w celu uniknięcia niechcianych efektów ubocznych -> gdy są zagnieżdzone elementy a klikniecie jednego z nich nie powinno wyzwalac akcji na elementach nadrzednych</p>
+            <p>Metody tej warto uzywać także przy rozbudowanych interakcjach z wieloma nasluchiwaczami np. Aplikacjach SPA.</p>
+            <br>
+            <br>
+            <h3>Delegacja zdarzeń</h3>
+            <p>Gdy na stronie internetowej znajduje się wiele elementów, a każdy z nich ma dołączony co najmniej jeden even listener co może mieć to wpływ na wydajność aplikacji. Dołączanie obsługi zdarzeń zajmuje więc czas przetwarzania, co jest zbędne, ponieważ użytkownik jest w stanie wejść w interakcje tylko z jednym elementem lub odnośnikiem na stronie w danym momencie, więc nie musimy rejestrować wszystkich event listenerów.  Prostą techniką obsługi wielu zdarzeń DOM jest delegowanie zdarzeń. Jest ona oparta na fakcie, że zdarzenia przemieszczają się po ścieżce propagacji, zgodnie z mechanizmem przepływu zdarzeń. Delegację można zastosować zarówno dla fazy przechwytywania jak i bąbelkowania, ale w praktyce najczęściej wykorzystywana jest jedynie bąbelkowanie. Wystarczy dołączyć tylko jeden event listener do przodka, aby obsłużyć wszystkie zdarzenia, które odnoszą się do elementów pochodnych danego elementu.</p>
+            
+            <h5>Zalety delegacji</h5>
+            <ul>
+                <li>mniejsze obciążenie przeglądarki</li>
+                <li>Obsługa dynamicznie dodanych elementów</li>
+                <li>Prostszy kod</li>
+            </ul>
+            <br>
+            <p>Wadą delegacji zdarzeń jest konieczność filtrowania tych elementów, którymi nie jesteśmy zainteresowani, co owocuje kilkoma dodatkowymi wierszami kodu.</p>
+        </section>
+        <section class="slide" id="slide6">
+            <h2>Najlepsze praktyki w manipulacji DOM i obsłudze zdarzeń</h2>
+            <p>Jeśli chodzi o Najlepsze praktyki w manipulacji DOM i obsłudze zdarzeń to trzeba pamiętać że manipulowanie DOM jest kosztowne pod względem wydajności. Dlatego warto pamiętać o paru zasadach</p>
+            <ul>
+                <li><h4>Wybór odpowiednich metod</h4>Rozsądnym podejściem jest wybieranie podejsc I metod, które minimalizują zmiany w strukturze DOM. Przykładowo zamiast wielokrotnie manipulować DOM poprzez dodawanie elementów jeden po drugim najlepiej użyć document.createDocumentFragment(), który już omawialiśmy LUB przygotować całą strukturę w pamięci a potem dodać ją do DOM.</li>
+                <li><h4>Używanie classList zamiast className w celu dodawania, usuwania bądź przełączania klas.</h4>
+                    <p>ClassName to wlasciwiosc ktora umowzliwia odczytanie I sutawienie wszystkich klas CSS elementu jako pojedynczy ciag znaków. Gdy używa się tej wlasciwosci to nadpisuje się caly ciag klas co oznacza że w celu dodania nowej klasy muszą zostać pobrane wszystkie istniejące. ClassList natomiast to nowoczesniejsze rozwiazanie, które udostepnia metody do manipulowania klasami pojedynczo. </p>
+                    <p>Uzywanie ClassName może prowadzić do przypadkowych problemów jak np. Usunięcie istniejącej klasy, która nie zostala uwzgledniona w nowym ciągu. ClassList pozwala za to na bezpieczne dodawanie usuwanie I przelaczanie klas bez wplywu na inne klasy.</p>
+                    <p>Ponadto classList jest także bardziej wydajne w porównaniu do className, ponieważ zamiast manipulacji całym ciągiem tekstowym, działa bezpośrednio na tablicy klas, co jest szybsze, zwłasza w przypadku większej ich ilości.</p>
+                </li>
+                <li><h4>Unikanie innerHTML na dużych stronach</h4>
+                    <p>Używanie innerHTML na dużych stronach wiąże się z różnymi problemami wpływającymi zarówno na wydajność jak I bezpieczeństwo aplikacji.Zmiana innerHTML wiąże się z przetwarzaniem całego zawartości elementu, co jest kosztowne, zwłaszcza na dużych stronach.Kiedy ustawiasz innerHTML na nową wartość: </p>
+                    <p>-przeglądarka musi przeanalizować cały HTML I przekształcić go w DOM co jest czasochłonne.</p>
+                    <p>-potem usuwa wszystkie dotychczasowe dzieci elementu a dodaje nowe. To może prowadzić do opóźnień na dużych stronach.</p>
+                    <p>następnie ponownie oblicza stylowanie I układ strony co również wpływa na wydajność</p>
+                    <br>
+                    <p>Ponadto jeśli zmieni się zawartość elementu za pomocą innerHTML to wszystkie przypisane zdarzenia na wcześniejszych elementach zostaną utracone. W kwestii bezpieczeństwa używanie innerHTML może wprowadzić pewne luki jesli zawartość, która jest dodawana pochodzi od użytkownika. InnerHTML może zinterpretować wstrzyknięty kod JavaScript w przypadku gdy dane zawierają szkodliwy kod. </p>
+                    <br>
+                    <p>Dobrymi alternatywami dla innerHTML są textContent I innerText w przypadku dodawania czystego tekstu, ponieważ są szybsze I nie interpretują HTML. Jeśli natomiast chce się dodać elementyHTML to lepszą metodą jest tworzenie elementów za pomocą createElement I dodawanie ich do DOM za pomocą appendChild lub insertBefore</p>
+                </li>
+            </ul>
+            <br>
+            <br>
+            <p>Jeśli chodzi o obsługę zdarzeń to dobrą praktyką jest usuwanie nasłuchiwaczy zdarzeń zwłaszcza w większych aplikacjach.</p>
+            <p>Brak ich usunięcia może prowadzić do wycieków pamięci. Podczas dodawania nasluchwiacza, ten nasluchiwacz utrzymuje odniesienie do elementu nawet jesli ten element został usunięty z DOM, co oznacza ze element nie zostanie usunięty z pamięci nawet jesli nie jest już potrzebny.</p>
+            <br>
+            <p>Jesli nasluchiwacze nie są usuwane to mogą zajmować zasoby systemowe przez dlugo czas, nawet po tym gdy juz nie są potrzebne. Ich zbyt wielka ilosc moze prowadzic do spowolnienia aplikacji.</p>
+        </section>
+    </div>
+
+    <footer>
+        <button id="prevBtn">Poprzedni</button>
+        <button id="nextBtn">Następny</button>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
